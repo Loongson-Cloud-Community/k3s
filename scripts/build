@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e -x
+export PS4='+${BASH_SOURCE}:${LINENO}: '
 
 cd $(dirname $0)/..
 
@@ -95,7 +96,7 @@ if [ ! -x ${INSTALLBIN}/cni ]; then
     TMPDIR=$(mktemp -d)
     trap cleanup EXIT
     WORKDIR=$TMPDIR/src/github.com/containernetworking/plugins
-    git clone -b $VERSION_CNIPLUGINS https://github.com/rancher/plugins.git $WORKDIR
+    git clone -b loong64-v0.8.6-k3s1 https://github.com/Loongson-Cloud-Community/rancher_cni_plugins.git $WORKDIR
     cd $WORKDIR
     GOPATH=$TMPDIR CGO_ENABLED=0 "${GO}" build -tags "$TAGS" -ldflags "$LDFLAGS $STATIC" -o $INSTALLBIN/cni
 )

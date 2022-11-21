@@ -2,9 +2,8 @@ TARGETS := $(shell ls scripts | grep -v \\.sh)
 
 .dapper:
 	@echo Downloading dapper
-	@curl -sL https://releases.rancher.com/dapper/v0.5.1/dapper-$$(uname -s)-$$(uname -m) > .dapper.tmp
+	@https_proxy=10.130.0.16:7890 curl -sL https://github.com/Loongson-Cloud-Community/dapper/releases/download/v0.6.0/dapper-Linux-loong64 > .dapper.tmp
 	@@chmod +x .dapper.tmp
-	@./.dapper.tmp -v
 	@mv .dapper.tmp .dapper
 
 $(TARGETS): .dapper
