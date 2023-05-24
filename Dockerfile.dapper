@@ -1,8 +1,8 @@
 ARG GOLANG=cr.loongnix.cn/library/golang:1.15-alpine
 FROM ${GOLANG}
 
-ARG http_proxy=http://10.130.0.16:7890
-ARG https_proxy=http://10.130.0.16:7890
+ARG http_proxy=http://10.130.0.20:7890
+ARG https_proxy=http://10.130.0.20:7890
 ARG no_proxy=$no_proxy
 ENV http_proxy=$http_proxy
 ENV https_proxy=$https_proxy
@@ -10,7 +10,7 @@ ENV no_proxy=$no_proxy
 
 RUN apk -U --no-cache add bash git gcc musl-dev vim less file curl wget ca-certificates jq linux-headers \
     zlib-dev tar zip squashfs-tools npm coreutils python2 openssl-dev libffi-dev libseccomp libseccomp-dev make \
-    libuv-static sqlite-dev sqlite-static libselinux libselinux-dev zlib-dev zlib-static zstd gzip alpine-sdk binutils
+    libuv-static sqlite-dev sqlite-static libselinux libselinux-dev zlib-dev zlib-static zstd gzip alpine-sdk binutils docker-ce-cli
 #RUN if [ "$(go env GOARCH)" = "arm64" ]; then                                                               \
 #    wget https://github.com/aquasecurity/trivy/releases/download/v0.16.0/trivy_0.16.0_Linux-ARM64.tar.gz && \
 #    tar -zxvf trivy_0.16.0_Linux-ARM64.tar.gz                                                            && \

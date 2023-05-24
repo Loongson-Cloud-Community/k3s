@@ -1,2 +1,0 @@
-FROM k3s:loong64-1-21-0
-COPY . /go/src/github.com/rancher/k3s/

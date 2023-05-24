@@ -308,6 +308,10 @@ setup_verify_arch() {
             ARCH=arm
             SUFFIX=-${ARCH}hf
             ;;
+        loongarch64)
+            ARCH=loong64
+            SUFFIX=-${ARCH}
+            ;;
         *)
             fatal "Unsupported architecture $ARCH"
     esac

@@ -1,8 +1,8 @@
-docker.io/rancher/coredns-coredns:1.8.3
-docker.io/rancher/klipper-helm:v0.4.3
-docker.io/rancher/klipper-lb:v0.1.2
-docker.io/rancher/library-busybox:1.32.1
-docker.io/rancher/library-traefik:2.4.8
-docker.io/rancher/local-path-provisioner:v0.0.19
-docker.io/rancher/metrics-server:v0.3.6
-docker.io/rancher/pause:3.1
+rancher/coredns-coredns:1.8.3
+rancher/klipper-helm:v0.4.3
+rancher/klipper-lb:v0.1.2
+rancher/library-busybox:1.32.1
+rancher/library-traefik:2.4.8
+rancher/local-path-provisioner:v0.0.19
+rancher/metrics-server:v0.3.6
+rancher/pause:3.1
