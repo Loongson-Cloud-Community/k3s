@@ -123,17 +123,17 @@ INSTALLBIN=$(pwd)/bin
 if [ ! -x ${INSTALLBIN}/cni ]; then
 (
     echo Building cni
-    TMPDIR=$(mktemp -d)
+    TMPDIR=/home/yzw/workspace/k3s-1.28.0/tmp
     trap cleanup EXIT
     WORKDIR=$TMPDIR/src/github.com/containernetworking/plugins
-    git clone -b $VERSION_CNIPLUGINS https://github.com/rancher/plugins.git $WORKDIR
+    git clone -b loong64-v0.8.6-k3s1 https://github.com/Loongson-Cloud-Community/rancher_cni_plugins.git $WORKDIR
     cd $WORKDIR
     GO111MODULE=off GOPATH=$TMPDIR CGO_ENABLED=0 "${GO}" build -tags "$TAGS" -gcflags="all=${GCFLAGS}" -ldflags "$VERSIONFLAGS $LDFLAGS $STATIC" -o $INSTALLBIN/cni
 )
 fi
 
 echo Building k3s
-CGO_ENABLED=1 "${GO}" build $BLDFLAGS -tags "$TAGS" -gcflags="all=${GCFLAGS}" -ldflags "$VERSIONFLAGS $LDFLAGS $STATIC" -o bin/k3s ./cmd/server/main.go
+CGO_ENABLED=1 "${GO}" build $BLDFLAGS -v -tags "$TAGS" -gcflags="all=${GCFLAGS}" -ldflags "$VERSIONFLAGS $LDFLAGS $STATIC" -o bin/k3s ./cmd/server/main.go
 ln -s k3s ./bin/containerd
 ln -s k3s ./bin/crictl
 ln -s k3s ./bin/ctr
@@ -148,16 +148,31 @@ ln -s k3s ./bin/kubectl
 
 export GOPATH=$(pwd)/build
 
-echo Building containerd
-pushd ./build/src/github.com/containerd/containerd
-TAGS="${TAGS/netcgo/netgo}"
-CGO_ENABLED=1 "${GO}" build -tags "$TAGS" -gcflags="all=${GCFLAGS}" -ldflags "$VERSIONFLAGS $LDFLAGS $STATIC" -o bin/containerd-shim-runc-v2 ./cmd/containerd-shim-runc-v2
-popd
-cp -vf ./build/src/github.com/containerd/containerd/bin/* ./bin/
+#echo Building containerd
+#pushd ./build/src/github.com/containerd/containerd
+#rm -f ./vendor/github.com/containerd/containerd
+#TAGS="${TAGS/netcgo/netgo}"
+#CGO_ENABLED=1 "${GO}" build -tags "$TAGS" -gcflags="all=${GCFLAGS}" -ldflags "$VERSIONFLAGS $LDFLAGS $STATIC" -o bin/containerd-shim-runc-v2 ./cmd/containerd-shim-runc-v2
+#popd
+#cp -f ./vendor/github.com/containerd/containerd ./bin/containerd
+#cp -vf ./build/src/github.com/containerd/containerd/bin/* ./bin/
 
 echo Building runc
-pushd ./build/src/github.com/opencontainers/runc
-rm -f runc
-make EXTRA_FLAGS="-gcflags=\"all=${GCFLAGS}\"" EXTRA_LDFLAGS="$LDFLAGS" BUILDTAGS="$RUNC_TAGS" $RUNC_STATIC
-popd
-cp -vf ./build/src/github.com/opencontainers/runc/runc ./bin/
+#pushd ./vendor/github.com/opencontainers/runc
+#rm -f ./vendor/github.com/opencontainers/runc/runc
+#rm -f runc
+#make EXTRA_LDFLAGS="-w -s" BUILDTAGS="$RUNC_TAGS" -C ./vendor/github.com/opencontainers/runc $RUNC_STATIC
+#make EXTRA_FLAGS="-gcflags=\"all=${GCFLAGS}\"" EXTRA_LDFLAGS="$LDFLAGS" BUILDTAGS="$RUNC_TAGS" -C ./vendor/github.com/opencontainers/runc $RUNC_STATIC
+#popd
+#cp -f ./vendor/github.com/opencontainers/runc/runc ./bin/runc
+#cp -vf ./vendor/github.com/opencontainers/runc/runc ./bin/
+
+echo Building containerd-shim
+rm -f ./vendor/github.com/containerd/containerd/bin/containerd-shim
+make -C ./vendor/github.com/containerd/containerd bin/containerd-shim
+cp -f ./vendor/github.com/containerd/containerd/bin/containerd-shim ./bin/containerd-shim
+
+echo Building containerd-shim-runc-v2
+rm -f ./vendor/github.com/containerd/containerd/bin/containerd-shim-runc-v2
+make -C ./vendor/github.com/containerd/containerd bin/containerd-shim-runc-v2
+cp -f ./vendor/github.com/containerd/containerd/bin/containerd-shim-runc-v2 ./bin/containerd-shim-runc-v2
